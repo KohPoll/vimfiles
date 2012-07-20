@@ -1,3 +1,27 @@
 [submodule "bundle/nerdtree"]
 	path = bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
+[submodule "bundle/tcomment_vim"]
+	path = bundle/tcomment_vim
+	url = https://github.com/tomtom/tcomment_vim.git
+[submodule "bundle/vim-surround"]
+	path = bundle/vim-surround
+	url = https://github.com/tpope/vim-surround
+[submodule "vim-repeat"]
+	path = vim-repeat
+	url = https://github.com/tpope/vim-repeat
+[submodule "bundle/snipmate.vim"]
+	path = bundle/snipmate.vim
+	url = https://github.com/msanders/snipmate.vim
+[submodule "bundle/syntastic"]
+	path = bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
+[submodule "bundle/vim-ragtag"]
+	path = bundle/vim-ragtag
+	url = https://github.com/tpope/vim-ragtag.git
+[submodule "bundle/zencoding-vim"]
+	path = bundle/zencoding-vim
+	url = https://github.com/mattn/zencoding-vim.git
+[submodule "bundle/supertab"]
+	path = bundle/supertab
+	url = https://github.com/ervandew/supertab.git
