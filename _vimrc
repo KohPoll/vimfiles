@@ -62,7 +62,7 @@ func! ViewInBrowser(which)
 
     let l:filePath = expand("%:p")
 
-    let l:inServer = stridx(l:filePath, "d:\\appserv\\www\\")
+    let l:inServer = stridx(l:filePath, "D:\\AppServ\\www\\")
     if l:inServer != -1
         let l:filePath = substitute(l:filePath, "D:\\\\appserv\\\\www\\\\", "http://localhost.:8080/", "g")
         let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
@@ -71,37 +71,6 @@ func! ViewInBrowser(which)
     echo l:filePath
 
     exec ":silent !start " . l:browser[a:which] . l:filePath . "\<cr>"
-endfunc
-
-" 编译less(使用windows下的lessjs)
-func! CompileLess()
-    let l:filePath = shellescape(expand("%:p"))
-    let l:outputFilePath = shellescape(expand("%:p:r") . ".css")
-
-    let l:cmd = "lessc " . l:filePath . " " . l:outputFilePath
-
-    let l:errs = system(l:cmd)
-
-    echo l:errs
-    " if (strlen(l:errs) > 0) 
-        " write quickfix errors to a temp file 
-        " let l:tmpFile = tempname()
-        " execute "redir! > " . tmpFile
-        " silent echon errs
-        " redir END
-
-        " " read in the errors temp file 
-        " execute "silent! cfile " . tmpFile
-
-        " " open the quicfix window
-        " "botright copen
-        " let s:qfix_buffer = bufnr("$")
-
-        " " delete the temp file
-        " call delete(tmpFile)
-    " endif
-
-    " exec ":silent !start " . l:lesscPath . l:filePath . " " . l:outputFilePath . "\<cr>"
 endfunc
 
 " 刷新dns
@@ -126,6 +95,9 @@ inoremap jj <ESC>
 
 " 退出
 nnoremap <leader>q :q<cr>
+
+" omnicomplete补全
+inoremap <C-d> <C-x><C-o>
 
 " 查找光标下单词(在当前文件中)
 nnoremap <leader>f :lv /<c-r>=expand("<cword>")<cr>/ %<cr>:lw<cr>
@@ -170,6 +142,10 @@ nnoremap <f3>ie :call ViewInBrowser("ie")<cr>
 " 启动git
 nnoremap <f4> :call RunGit()<cr>
 
+" 插入时间戳
+nnoremap <f5> a<C-r>=strftime("%Y-%m-%d %I:%M:%S")<cr><Esc>
+inoremap <f5> <C-r>=strftime("%Y-%m-%d %a %I:%M:%S")<cr>
+
 " 切到当前目录
 nnoremap <leader>cd :cd %:p:h<cr>
 
@@ -205,14 +181,17 @@ endif
 
 " 配色
 
-set background=dark
+if has("gui_running")
+  set background=dark
+  colorscheme railscasts
+  autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
 
-" colorscheme molokai
-" let g:molokai_original = 1
-" autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
-
-colorscheme railscasts
-autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
+  " colorscheme molokai
+  " let g:molokai_original = 1
+  " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
+else
+  colorscheme darkblue
+endif
 
 " 保证语法高亮
 syntax on
@@ -224,11 +203,11 @@ syntax on
 " 开启文件类型
 filetype plugin indent on
 
-" 自动编译less
-autocmd! BufWritePost,FileWritePost *.less call CompileLess()
-
-" 自动编译coffee
-autocmd! BufWritePost,FileWritePost *.coffee silent CoffeeMake! | cwindow | redraw!
+" omnicomplete补全设置
+autocmd! FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd! FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd! FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd! FileType php,phtml set omnifunc=phpcomplete#CompletePHP
 
 " js语法高亮(支持jquery)
 autocmd! BufRead,BufNewFile *.js set syntax=jquery
@@ -236,15 +215,9 @@ autocmd! BufRead,BufNewFile *.js set syntax=jquery
 " json语法高亮
 autocmd! BufRead,BufNewFile *.json set filetype=json
 
-" less支持
-autocmd! BufRead,BufNewFile *.less set filetype=less
-
-" 高亮html中的php(phtml.vim)
-autocmd! BufRead,BufNewFile *.php set filetype=phtml
-
 " 自动补全括号,引号
-"inoremap " ""<ESC>i
-"inoremap ' ''<ESC>i
+" inoremap " ""<ESC>i
+" inoremap ' ''<ESC>i
 " inoremap ( ()<ESC>i
 " inoremap { {}<ESC>i
 " inoremap [ []<ESC>i
@@ -314,7 +287,8 @@ augroup ft_statuslinecolor
     autocmd InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
 augroup END
 
-set statusline=%F    " Path.
+set statusline=%{SyntasticStatuslineFlag()} " syntax error
+set statusline+=%F   " Path.
 set statusline+=%m   " Modified flag.
 set statusline+=%r   " Readonly flag.
 set statusline+=%w   " Preview window flag.
@@ -400,6 +374,15 @@ set nobomb "不设置字节序标记
 
 " {{{ Plugin
 
+" supertab.vim
+" tab键补全
+
+" snipmate.vim
+" 片段展开
+
+" syntastic.vim
+" 语法检查
+
 " TComment.vim
 " gc(toggle comment selected), gcc(toggle comment current line)
 
@@ -412,13 +395,11 @@ set nobomb "不设置字节序标记
 " make some(e.g: surround) actions repeatable with .
 
 " ragtag.vim
-" ctrl-x /, ctrl-x space, ctrl-x enter
+" ctrl-x /(闭合标签); ctrl-x space, ctrl-x enter(生成标签)
 let g:ragtag_global_maps = 1
 
-" supertab.vim
-let g:SuperTabRetainCompletionDuration = 'session' "记住上次使用的补全方式,直到退出vim或选择了另外的补全方式
-
 " zencoding.vim
+" ctrl-e ,
 let g:user_zen_leader_key = '<C-e>'
 let g:use_zen_complete_tag = 1
 
