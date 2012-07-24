@@ -2,6 +2,7 @@
 
 
 if in windows
+
   cd 到vim安装目录
   `git clone https://github.com/KohPoll/vimfiles.git`
 
@@ -14,6 +15,7 @@ if in windows
 
   将vim安装目录\vimfiles\lib加入系统PATH变量
 else
+
   cd 到用户目录
   `git clone https://github.com/KohPoll/vimfiles.git`
 
