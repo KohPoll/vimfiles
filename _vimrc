@@ -190,10 +190,16 @@ if has('gui_running')
   if has("win32")
     " 最大化窗口
     autocmd! GUIEnter * simalt ~x	
-
     " 字体配置
     exec 'set guifont='.iconv('Consolas', &enc, 'gbk').':h12:cANSI'
     "exec 'set guifontwide='.iconv('Microsoft\ YaHei', &enc, 'gbk').':h14'
+  endif
+
+  if has("gui_macvim")
+    " 最大化窗口
+    set lines=999 columns=999
+    " 字体配置
+    set guifont=Courier_New:h16
   endif
 endif
 
