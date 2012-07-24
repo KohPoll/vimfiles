@@ -38,52 +38,61 @@ nnoremap ; :
 
 " {{{ Helper Function
 
+" 判断系统
+func! MySys()
+  if has("win32")
+    return "windows"
+  else
+    return "linux"
+  endif
+endfunc
+
 " 获取当前目录
 func! GetPWD()
-    return substitute(getcwd(), "", "", "g")
+  return substitute(getcwd(), "", "", "g")
 endfunc
 
 " 关闭匹配字符
 func! ClosePair(char)
-    if getline('.')[col('.') - 1] == a:char
-        return "\<Right>"
-    else
-        return a:char
-    endif
+  if getline('.')[col('.') - 1] == a:char
+    return "\<Right>"
+  else
+    return a:char
+  endif
 endfunc
 
 " 浏览器中查看
 func! ViewInBrowser(which)
-    let l:browser = {
-        \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe ",
-        \"ie": "C:/Program Files/Internet Explorer/iexplore.exe ",
-        \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe "
-    \}
+  let l:browser = {
+    \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe ",
+    \"ie": "C:/Program Files/Internet Explorer/iexplore.exe ",
+    \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe "
+  \}
 
-    let l:filePath = expand("%:p")
+  let l:filePath = expand("%:p")
 
-    let l:inServer = stridx(l:filePath, "D:\\AppServ\\www\\")
-    if l:inServer != -1
-        let l:filePath = substitute(l:filePath, "D:\\\\appserv\\\\www\\\\", "http://localhost.:8080/", "g")
-        let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
-    endif
+  let l:inServer = stridx(l:filePath, "D:\\AppServ\\www\\")
+  if l:inServer != -1
+    let l:filePath = substitute(l:filePath, "D:\\\\appserv\\\\www\\\\", "http://localhost.:8080/", "g")
+    let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
+  endif
 
-    echo l:filePath
+  echo l:filePath
 
-    exec ":silent !start " . l:browser[a:which] . l:filePath . "\<cr>"
+  exec ":silent !start " . l:browser[a:which] . l:filePath . "\<cr>"
 endfunc
 
 " 刷新dns
 func! RefreshSystemDNS()
-    !start cmd /C ipconfig /flushdns
-    syn on
+  !start cmd /C ipconfig /flushdns
+  syn on
 endfunc
 
 " 启动git
 func! RunGit()
-    cd %:p:h "先cd到所编辑文件的目录
-    !start cmd /C "D:\ProgramTool\Git\bin\sh.exe" --login -i
-    syn on
+  cd %:p:h "先cd到所编辑文件的目录
+  !start cmd /C "D:\ProgramTool\Git\bin\sh.exe" --login -i
+  syn on
 endfunc
 
 " }}}
@@ -134,53 +143,61 @@ nnoremap <C-j> <C-w>j
 nnoremap <leader>v <C-w>v
 nnoremap <leader>s <C-w>s
 
-" 在浏览器中查看
-nnoremap <f3>ch :call ViewInBrowser("cr")<cr>
-nnoremap <f3>ff :call ViewInBrowser("ff")<cr>
-nnoremap <f3>ie :call ViewInBrowser("ie")<cr>
-
-" 启动git
-nnoremap <f4> :call RunGit()<cr>
-
 " 插入时间戳
-nnoremap <f5> a<C-r>=strftime("%Y-%m-%d %I:%M:%S")<cr><Esc>
-inoremap <f5> <C-r>=strftime("%Y-%m-%d %a %I:%M:%S")<cr>
+nnoremap <f6> a<C-r>=strftime("%Y-%m-%d %I:%M:%S")<cr><Esc>
+inoremap <f6> <C-r>=strftime("%Y-%m-%d %a %I:%M:%S")<cr>
 
 " 切到当前目录
 nnoremap <leader>cd :cd %:p:h<cr>
 
-" 快捷编辑vimrc
-nnoremap <leader>rc :vsp $VIM\_vimrc<cr>
-" 快捷source vimrc
-nnoremap <leader>src :source $VIM\_vimrc<cr>
-" vimrc被编辑后，source之
-autocmd! bufwritepost _vimrc source $VIM\_vimrc
+if MySys() == "windows"
+  " 快捷编辑vimrc
+  nnoremap <leader>rc :vsp $VIM\_vimrc<cr>
+  " 快捷source vimrc
+  nnoremap <leader>src :source $VIM\_vimrc<cr>
+  " vimrc被编辑后，source之
+  autocmd! bufwritepost _vimrc source $VIM\_vimrc
 
-" 快捷编辑hosts
-nnoremap <leader>h :vsp c:\windows\system32\drivers\etc\hosts<cr>
-" hosts被编辑后，刷新dns
-autocmd! bufwritepost hosts call RefreshSystemDNS()
+  " 快捷编辑hosts
+  nnoremap <leader>h :vsp c:\windows\system32\drivers\etc\hosts<cr>
+  " hosts被编辑后，刷新dns
+  autocmd! bufwritepost hosts call RefreshSystemDNS()
+
+  " 启动git
+  nnoremap <f4> :call RunGit()<cr>
+
+  " 在浏览器中查看
+  nnoremap <f3>ch :call ViewInBrowser("cr")<cr>
+  nnoremap <f3>ff :call ViewInBrowser("ff")<cr>
+  nnoremap <f3>ie :call ViewInBrowser("ie")<cr>
+elseif MySys() == "linux"
+  " 快捷编辑vimrc
+  nnoremap <leader>rc :vsp ~/.vimrc<cr>
+  " 快捷source vimrc
+  nnoremap <leader>src :source ~/.vimrc<cr>
+  " vimrc被编辑后，source之
+  autocmd! bufwritepost .vimrc source ~/.vimrc
+endif
 
 " }}}
 
 " {{{ User Interface & Color Scheme
 
 if has('gui_running')
-    " 只显示菜单
-    set guioptions=mcr
+  " 只显示菜单
+  set guioptions=mcr
 
-    if has("win32")
-      " 最大化窗口
-      autocmd! GUIEnter * simalt ~x	
+  if has("win32")
+    " 最大化窗口
+    autocmd! GUIEnter * simalt ~x	
 
-      " 字体配置
-      exec 'set guifont='.iconv('Consolas', &enc, 'gbk').':h12:cANSI'
-      "exec 'set guifontwide='.iconv('Microsoft\ YaHei', &enc, 'gbk').':h14'
-    endif
+    " 字体配置
+    exec 'set guifont='.iconv('Consolas', &enc, 'gbk').':h12:cANSI'
+    "exec 'set guifontwide='.iconv('Microsoft\ YaHei', &enc, 'gbk').':h14'
+  endif
 endif
 
 " 配色
-
 if has("gui_running")
   set background=dark
   colorscheme railscasts
@@ -281,10 +298,10 @@ set showcmd " 状态行显示目前所执行的指令
 
 " 格式状态栏 {{{
 augroup ft_statuslinecolor 
-    autocmd!
+  autocmd!
 
-    autocmd InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
-    autocmd InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
+  autocmd InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
+  autocmd InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
 augroup END
 
 set statusline=%{SyntasticStatuslineFlag()} " syntax error
@@ -354,9 +371,9 @@ set fileencodings=ucs-bom,utf-8,chinese,latin-1 "vim解析文件时测试的编码顺序
 " set fileencodings=utf-8,gbk,ucs-bom,gb18030,gb2312,cp936,latin1
 " 文件编码
 if has("win32")  
-    set fileencoding=chinese  
+  set fileencoding=chinese  
 else  
-    set fileencoding=utf-8  
+  set fileencoding=utf-8  
 endif  
 
 " 解决中文菜单乱码
@@ -366,7 +383,7 @@ source $VIMRUNTIME/menu.vim
 language messages zh_cn.utf-8
 " 以双字节处理特殊字符
 if v:lang =~? '^\(zh\)\|\(ja\)\|\(ko\)'
-    set ambiwidth=double
+  set ambiwidth=double
 endif
 set nobomb "不设置字节序标记
 
@@ -409,7 +426,7 @@ let g:fencview_autodetect = 0
 nnoremap <f2> :FencView<cr>
 
 " NERDTree.vim
-nnoremap <f9> :NERDTreeToggle<cr>
+nnoremap <f8> :NERDTreeToggle<cr>
 let NERDTreeIgnore = ['\.pyc$', '\.svn$', '\.tmp$', '\.bak', '\~$', '\.swp$', 'Thumbs\.db']
 let NERDTreeQuitOnOpen = 0
 
@@ -417,7 +434,8 @@ let NERDTreeQuitOnOpen = 0
 
 " {{{ Other
 
-" cd to d
-cd d:\
+if MySys() == "windows"
+  cd d:\
+endif
 
 " }}}
