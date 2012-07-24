@@ -38,15 +38,6 @@ nnoremap ; :
 
 " {{{ Helper Function
 
-" 判断系统
-func! MySys()
-  if has("win32")
-    return "windows"
-  else
-    return "linux"
-  endif
-endfunc
-
 " 获取当前目录
 func! GetPWD()
   return substitute(getcwd(), "", "", "g")
@@ -63,23 +54,49 @@ endfunc
 
 " 浏览器中查看
 func! ViewInBrowser(which)
-  let l:browser = {
-    \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe ",
-    \"ie": "C:/Program Files/Internet Explorer/iexplore.exe ",
-    \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe "
-  \}
+  if has("win32")
+    let l:browsers = {
+      \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe ",
+      \"ie": "C:/Program Files/Internet Explorer/iexplore.exe ",
+      \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe "
+    \}
+
+    let l:serverPath = "D:/AppServ/www/"
+
+    let l:urlPrefix = "http://localhost.:8080/"
+
+    let l:cmdPrefix = "!start "
+    let l:cmdSuffix = "\<cr>"
+  elseif has("mac")
+    let l:browsers = {
+      \"cr": "/Applications/Google Chrome.app/"
+    \}
+
+    let l:serverPath = "/Users/qiyao/Sites/"
+
+    let l:urlPrefix = "http://localhost/~qiyao/"
+
+    let l:cmdPrefix = "!open -a "
+    let l:cmdSuffix = " --args -new-tab \<cr>"
+  else
+    echo "dose not support this os."
+    finish
+  endif
 
   let l:filePath = expand("%:p")
+  let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
 
-  let l:inServer = stridx(l:filePath, "D:\\AppServ\\www\\")
+  let l:inServer = stridx(l:filePath, l:serverPath)
+
   if l:inServer != -1
-    let l:filePath = substitute(l:filePath, "D:\\\\appserv\\\\www\\\\", "http://localhost.:8080/", "g")
-    let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
+    let l:filePath = substitute(l:filePath, l:serverPath, l:urlPrefix, "g")
+  else
+    let l:filePath = "file://" . l:filePath
   endif
 
   echo l:filePath
 
-  exec ":silent !start " . l:browser[a:which] . l:filePath . "\<cr>"
+  exec ":silent " . l:cmdPrefix . l:browsers[a:which] . l:filePath . l:cmdSuffix
 endfunc
 
 " 刷新dns
@@ -150,7 +167,7 @@ inoremap <f6> <C-r>=strftime("%Y-%m-%d %a %I:%M:%S")<cr>
 " 切到当前目录
 nnoremap <leader>cd :cd %:p:h<cr>
 
-if MySys() == "windows"
+if has("win32")
   " 快捷编辑vimrc
   nnoremap <leader>rc :vsp $VIM\_vimrc<cr>
   " 快捷source vimrc
@@ -170,13 +187,16 @@ if MySys() == "windows"
   nnoremap <f3>ch :call ViewInBrowser("cr")<cr>
   nnoremap <f3>ff :call ViewInBrowser("ff")<cr>
   nnoremap <f3>ie :call ViewInBrowser("ie")<cr>
-elseif MySys() == "linux"
+else
   " 快捷编辑vimrc
   nnoremap <leader>rc :vsp ~/.vimrc<cr>
   " 快捷source vimrc
   nnoremap <leader>src :source ~/.vimrc<cr>
   " vimrc被编辑后，source之
   autocmd! bufwritepost .vimrc source ~/.vimrc
+
+  " 在浏览器中查看(默认用chrome开)
+  nnoremap <f3> :call ViewInBrowser("cr")<cr>
 endif
 
 " }}}
@@ -438,9 +458,9 @@ let NERDTreeQuitOnOpen = 0
 
 " }}}
 
-" {{{ Other
+" {{{ Personal
 
-if MySys() == "windows"
+if has("win32")
   cd d:\
 endif
 
