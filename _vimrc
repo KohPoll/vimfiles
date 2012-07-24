@@ -56,9 +56,9 @@ endfunc
 func! ViewInBrowser(which)
   if has("win32")
     let l:browsers = {
-      \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe ",
-      \"ie": "C:/Program Files/Internet Explorer/iexplore.exe ",
-      \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe "
+      \"cr": "C:/Users/kongxp/AppData/Local/Google/Chrome/Application/chrome.exe",
+      \"ie": "C:/Program Files/Internet Explorer/iexplore.exe",
+      \"ff": "C:/Program Files/Mozilla Firefox/firefox.exe"
     \}
 
     let l:serverPath = "D:/AppServ/www/"
@@ -83,6 +83,8 @@ func! ViewInBrowser(which)
     finish
   endif
 
+  let l:surroundQuote = "\""
+
   let l:filePath = expand("%:p")
   let l:filePath = substitute(l:filePath, "\\\\", "/", "g")
 
@@ -94,9 +96,12 @@ func! ViewInBrowser(which)
     let l:filePath = "file://" . l:filePath
   endif
 
+  let l:filePath = l:surroundQuote . l:filePath . l:surroundQuote
+  let l:browser = l:surroundQuote . l:browsers[a:which] . l:surroundQuote
+
   echo l:filePath
 
-  exec ":silent " . l:cmdPrefix . l:browsers[a:which] . l:filePath . l:cmdSuffix
+  exec ":silent " . l:cmdPrefix . l:browser . " " .l:filePath . l:cmdSuffix
 endfunc
 
 " Ë¢ÐÂdns
