@@ -6,6 +6,7 @@
   * `cd` 到vim安装目录 `git clone https://github.com/KohPoll/vimfiles.git`
 
   * `cd` 到vimfilels目录
+  
   `git submodule init`
 
   `git submodule update`
@@ -14,13 +15,14 @@
 
   * 将vim安装目录\vimfiles\lib加入系统PATH变量
   
-===
+----
 
 如果是linux/mac系统：
 
   * `cd` 到用户目录 `git clone https://github.com/KohPoll/vimfiles.git`
 
   * `cd` 到vimfilels目录
+  
   `git submodule init`
 
   `git submodule update`
