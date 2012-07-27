@@ -133,9 +133,13 @@ inoremap <C-d> <C-x><C-o>
 " 查找光标下单词(在当前文件中)
 nnoremap <leader>f :lv /<c-r>=expand("<cword>")<cr>/ %<cr>:lw<cr>
 
-" 移动
-nnoremap H 0
-nnoremap L $
+" 移动(行末行首,不含空白)
+nnoremap H ^
+nnoremap L g_
+" 当前行下移
+nnoremap - ddp
+" 当前行上移
+nnoremap _ ddkgPk
 
 " 编辑 (Y, C, D)
 nnoremap Y y$
@@ -172,13 +176,14 @@ inoremap <f6> <C-r>=strftime("%Y-%m-%d %a %I:%M:%S")<cr>
 " 切到当前目录
 nnoremap <leader>cd :cd %:p:h<cr>
 
+" 快捷编辑vimrc
+nnoremap <leader>ev :vsp $MYVIMRC<cr>
+" 快捷source vimrc
+nnoremap <leader>sv :source $MYVIMRC<cr>
+
 if has("win32")
-  " 快捷编辑vimrc
-  nnoremap <leader>rc :vsp $VIM\_vimrc<cr>
-  " 快捷source vimrc
-  nnoremap <leader>src :source $VIM\_vimrc<cr>
   " vimrc被编辑后，source之
-  autocmd! bufwritepost _vimrc source $VIM\_vimrc
+  autocmd! bufwritepost _vimrc source $MYVIMRC
 
   " 快捷编辑hosts
   nnoremap <leader>h :vsp c:\windows\system32\drivers\etc\hosts<cr>
@@ -193,12 +198,8 @@ if has("win32")
   nnoremap <f3>ff :call ViewInBrowser("ff")<cr>
   nnoremap <f3>ie :call ViewInBrowser("ie")<cr>
 else
-  " 快捷编辑vimrc
-  nnoremap <leader>rc :vsp ~/.vimrc<cr>
-  " 快捷source vimrc
-  nnoremap <leader>src :source ~/.vimrc<cr>
   " vimrc被编辑后，source之
-  autocmd! bufwritepost .vimrc source ~/.vimrc
+  autocmd! bufwritepost .vimrc source $MYVIMRC
 
   " 在浏览器中查看(默认用chrome开)
   nnoremap <f3> :call ViewInBrowser("cr")<cr>
@@ -426,7 +427,8 @@ set nobomb "不设置字节序标记
 " tab键补全
 
 " snipmate.vim
-" 片段展开
+" 空格键-片段展开
+" inoremap <space> <c-r>=TriggerSnippet()<cr>
 
 " syntastic.vim
 " 语法检查
