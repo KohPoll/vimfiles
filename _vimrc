@@ -117,6 +117,14 @@ func! RunGit()
   syn on
 endfunc
 
+func! NewFileFromCurrent(ext)
+  let l:filePath = expand("%:p") 
+  let l:newFilePath = l:filePath . "." . a:ext
+
+  exec ":silent !cp " . l:filePath . " " . l:newFilePath . " \<cr>"
+  exec ":tabedit " . l:newFilePath . " \<cr>"
+endfunc
+
 " }}}
 
 " {{{ Shortcuts Mapping
@@ -231,13 +239,13 @@ endif
 
 " 配色
 if has("gui_running")
-  set background=dark
-  colorscheme railscasts
-  autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
+  " set background=dark
+  " colorscheme railscasts
+  " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
 
-  " colorscheme molokai
-  " let g:molokai_original = 1
-  " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
+  colorscheme molokai
+  let g:molokai_original = 1
+  autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
 else
   colorscheme darkblue
 endif
@@ -263,6 +271,9 @@ autocmd! BufRead,BufNewFile *.js set syntax=jquery
 
 " json语法高亮
 autocmd! BufRead,BufNewFile *.json set filetype=json
+
+" 编译less
+autocmd! BufWritePost *.less silent LessMake! | cwindow
 
 " 自动补全括号,引号
 " inoremap " ""<ESC>i
@@ -432,6 +443,9 @@ set nobomb "不设置字节序标记
 
 " syntastic.vim
 " 语法检查
+let g:syntastic_mode_map = { 'mode': 'passive',
+                           \ 'active_filetypes': [],
+                           \ 'passive_filetypes': [] }
 
 " TComment.vim
 " gc(toggle comment selected), gcc(toggle comment current line)
@@ -468,7 +482,8 @@ let NERDTreeQuitOnOpen = 0
 " {{{ Personal
 
 if has("win32")
-  cd d:\
+  cd D:\ProgramTool\Vim\vimfiles\bundle\
+  " cd D:\
 endif
 
 " }}}
