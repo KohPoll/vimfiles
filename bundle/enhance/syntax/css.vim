@@ -76,7 +76,7 @@ syn region cssFontDescriptorFunction contained matchgroup=cssFunctionName start=
 syn match cssUnicodeRange contained "U+[0-9A-Fa-f?]\+"
 syn match cssUnicodeRange contained "U+\x\+-\x\+"
 
-syn keyword cssColor contained aqua black blue fuchsia gray green lime maroon navy olive purple red silver teal yellow
+syn keyword cssColor contained aqua black blue fuchsia gray green lime maroon navy olive orange purple red silver teal yellow
 " FIXME: These are actually case-insentivie too, but (a) specs recommend using
 " mixed-case (b) it's hard to highlight the word `Background' correctly in
 " all situations

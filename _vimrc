@@ -239,7 +239,7 @@ endif
 
 " 配色
 if has("gui_running")
-  " set background=dark
+  set background=dark
   " colorscheme railscasts
   " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
 
@@ -271,9 +271,6 @@ autocmd! BufRead,BufNewFile *.js set syntax=jquery
 
 " json语法高亮
 autocmd! BufRead,BufNewFile *.json set filetype=json
-
-" 编译less
-autocmd! BufWritePost *.less silent LessMake! | cwindow
 
 " 自动补全括号,引号
 " inoremap " ""<ESC>i
@@ -443,6 +440,7 @@ set nobomb "不设置字节序标记
 
 " syntastic.vim
 " 语法检查
+" 不自动检查，手动检查
 let g:syntastic_mode_map = { 'mode': 'passive',
                            \ 'active_filetypes': [],
                            \ 'passive_filetypes': [] }
@@ -482,8 +480,7 @@ let NERDTreeQuitOnOpen = 0
 " {{{ Personal
 
 if has("win32")
-  cd D:\ProgramTool\Vim\vimfiles\bundle\
-  " cd D:\
+  cd D:\
 endif
 
 " }}}
