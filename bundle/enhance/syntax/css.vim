@@ -22,6 +22,7 @@ endif
 
 syn case ignore
 
+syn match cssTagName "\*"
 syn keyword cssTagName html body head h1 h2 h3 h4 h5 h6 p br hr div span blockquote
 syn keyword cssTagName base meta title link script style
 syn keyword cssTagName ul ol li dl dd dt
@@ -31,7 +32,6 @@ syn keyword cssTagName area img map object param iframe frameset frame noscript 
 syn keyword cssTagName a abbr acronym address bdo cite code del dfn em ins kbd pre q samp big small strong sub sup var
 syn keyword cssTagName i s b
 syn keyword cssTagName param samp applet u strike menu isindex
-
 syn match cssTagName "@page\>" nextgroup=cssDefinition
 
 " html5 tag
@@ -40,12 +40,9 @@ syn keyword cssTagName figcaption figure footer header hgroup keygen mark
 syn keyword cssTagName meter nav object output progress rp rt ruby section
 syn keyword cssTagName summary time var video xmp
 
-"syn match cssTagName "\<table\>"
-"syn match cssTagName "\*"
-
 " selector
 syn match cssSelectorOp "[+>.]"
-syn match cssSelectorOp2 "[~|]\?=" contained
+syn match cssSelectorOp2 "[~|^$*]\?=" contained
 syn region cssAttributeSelector matchgroup=cssSelectorOp start="\[" end="]" transparent contains=cssUnicodeEscape,cssSelectorOp2,cssStringQ,cssStringQQ
 
 try
@@ -251,37 +248,37 @@ if version >= 508 || !exists("did_css_syn_inits")
 
   HiLink cssComment Comment
 
-  HiLink cssTagName Label
+  HiLink cssTagName Identifier
   HiLink cssClassName Statement
 
   HiLink cssSelectorOp Special
   HiLink cssSelectorOp2 Special
   
-  HiLink cssAnimeProp StorageClass
-  HiLink cssFontProp StorageClass
-  HiLink cssColorProp StorageClass
-  HiLink cssTextProp StorageClass
-  HiLink cssBoxProp StorageClass
-  HiLink cssRenderProp StorageClass
-  HiLink cssAuralProp StorageClass
-  HiLink cssGeneratedContentProp StorageClass
-  HiLink cssPagingProp StorageClass
-  HiLink cssTableProp StorageClass
-  HiLink cssUIProp StorageClass
-  HiLink cssFilterProp StorageClass
+  HiLink cssAnimeProp Type
+  HiLink cssFontProp Type
+  HiLink cssColorProp Type
+  HiLink cssTextProp Type
+  HiLink cssBoxProp Type
+  HiLink cssRenderProp Type
+  HiLink cssAuralProp Type
+  HiLink cssGeneratedContentProp Type
+  HiLink cssPagingProp Type
+  HiLink cssTableProp Type
+  HiLink cssUIProp Type
+  HiLink cssFilterProp Type
 
-  HiLink cssGradientAttr Type
-  HiLink cssFontAttr Type
-  HiLink cssColorAttr Type
-  HiLink cssTextAttr Type
-  HiLink cssBoxAttr Type
-  HiLink cssRenderAttr Type
-  HiLink cssAuralAttr Type
-  HiLink cssGeneratedContentAttr Type
-  HiLink cssPagingAttr Type
-  HiLink cssTableAttr Type
-  HiLink cssUIAttr Type
-  HiLink cssCommonAttr Type
+  HiLink cssGradientAttr Function
+  HiLink cssFontAttr Function
+  HiLink cssColorAttr Function
+  HiLink cssTextAttr Function
+  HiLink cssBoxAttr Function
+  HiLink cssRenderAttr Function
+  HiLink cssAuralAttr Function
+  HiLink cssGeneratedContentAttr Function
+  HiLink cssPagingAttr Function
+  HiLink cssTableAttr Function
+  HiLink cssUIAttr Function
+  HiLink cssCommonAttr Function
   
   HiLink cssPseudoClassId Constant
   HiLink cssPseudoClassLang Preproc

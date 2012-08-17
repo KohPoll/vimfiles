@@ -117,14 +117,6 @@ func! RunGit()
   syn on
 endfunc
 
-func! NewFileFromCurrent(ext)
-  let l:filePath = expand("%:p") 
-  let l:newFilePath = l:filePath . "." . a:ext
-
-  exec ":silent !cp " . l:filePath . " " . l:newFilePath . " \<cr>"
-  exec ":tabedit " . l:newFilePath . " \<cr>"
-endfunc
-
 " }}}
 
 " {{{ Shortcuts Mapping
@@ -225,27 +217,31 @@ if has('gui_running')
     " 最大化窗口
     autocmd! GUIEnter * simalt ~x	
     " 字体配置
-    exec 'set guifont='.iconv('Consolas', &enc, 'gbk').':h12:cANSI'
-    "exec 'set guifontwide='.iconv('Microsoft\ YaHei', &enc, 'gbk').':h14'
+    set guifont=Inconsolata:h14:cANSI
+    set guifontwide=YouYuan:h12:b:cGB2312
   endif
 
   if has("gui_macvim")
     " 最大化窗口
     set lines=999 columns=999
     " 字体配置
-    set guifont=Courier_New:h16
+    set guifont=Monaco:h16
   endif
 endif
 
 " 配色
 if has("gui_running")
   set background=dark
+
+  colorscheme ir_black
+  autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme ir_black
+
   " colorscheme railscasts
   " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme railscasts
 
-  colorscheme molokai
-  let g:molokai_original = 1
-  autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
+  " colorscheme molokai
+  " let g:molokai_original = 1
+  " autocmd! BufNewFile,BufRead,BufEnter,WinEnter * colorscheme molokai
 else
   colorscheme darkblue
 endif
@@ -307,6 +303,8 @@ set modelines=0
 
 " 补全选项
 set completeopt=longest,menu
+" 编辑时显示(),{},[]配对
+set showmatch 
 
 " 长文本处理
 set wrap
@@ -372,7 +370,6 @@ set statusline+=\ (%l\/%L,\ %v)
 set magic     " Set magic on, for regular expressions
 set incsearch
 set hlsearch  
-set showmatch 
 set ignorecase
 set smartcase
 nnoremap <leader><space> :noh<cr>
@@ -407,8 +404,7 @@ set foldmethod=marker
 
 " 编码设置
 set encoding=utf-8 "vim内部编码
-set fileencodings=ucs-bom,utf-8,chinese,latin-1 "vim解析文件时测试的编码顺序
-" set fileencodings=utf-8,gbk,ucs-bom,gb18030,gb2312,cp936,latin1
+set fileencodings=ucs-bom,utf-8,chinese "vim解析文件时测试的编码顺序
 " 文件编码
 if has("win32")  
   set fileencoding=chinese  
@@ -474,6 +470,7 @@ nnoremap <f2> :FencView<cr>
 nnoremap <f8> :NERDTreeToggle<cr>
 let NERDTreeIgnore = ['\.pyc$', '\.svn$', '\.tmp$', '\.bak', '\~$', '\.swp$', 'Thumbs\.db']
 let NERDTreeQuitOnOpen = 0
+" let NERDTreeDirArrows = 1
 
 " }}}
 
