@@ -24,3 +24,6 @@ https://github.com/mattn/zencoding-vim.git
 
 supertab
 https://github.com/ervandew/supertab.git
+
+vim-less
+https://github.com/KohPoll/vim-less.git
